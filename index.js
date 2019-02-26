@@ -43,6 +43,9 @@ const web = new WebClient(token);
 
 
 io.on('connection', function (socket) {
+  socket.on('get token', function () {
+    io.emit('token', token);
+  });
 
   socket.on('initial data', function () {
 

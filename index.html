@@ -87,44 +87,33 @@
       var channelList = [], userList = [], chatData = [];
       var socket = io();
       var firstMesage = false;
-      // socket.on('connect', function () {
-        socket.emit('initial data');
-      // });
-      // // Get Channel List
-      
+
+      socket.emit('get token');
+      socket.on('token', function (token) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+              console.log("response", this.responseText);
+          }
+        };
+        xhttp.open("GET", "https://slack.com/api/conversations.list?token=token&pretty=1", true);
+        xhttp.send();
+      });
+
+      socket.emit('initial data');
+
+      // Get Channel List
       socket.on('conversations list', function (conversationsList) {
         channelList = conversationsList.channels;
         addOptionsToDropdown(channelList);
       });
 
-      // $.ajax({
-      //   url: 'https://slack.com/api/conversations.list?token=xoxp-545544835075-547073558758-550965064677-409562c5bee5966722a87e518e4cdf30&pretty=1', type: 'GET', dataType: 'json',
-      //   success: function (data, textStatus, xhr) {
-      //     console.log("Channel List", data);
-      //     channelList = data.channels;
-      //     addOptionsToDropdown(channelList);
-      //   },
-      //   error: function (xhr, textStatus, errorThrown) {
-      //     console.error('Error retrieving Channel List');
-      //   }
-      // });
-      // // Get User List
-      
+      // // Get User List      
       socket.on('users list', function (usersList) {
         userList = usersList.members;
         addOptionsToDropdown(userList);
       });
-      // $.ajax({
-      //   url: 'https://slack.com/api/users.list?token=xoxp-545544835075-547073558758-550965064677-409562c5bee5966722a87e518e4cdf30&pretty=1', type: 'GET', dataType: 'json',
-      //   success: function (data, textStatus, xhr) {
-      //     console.log("User List", data);
-      //     userList = data.members;
-      //     addOptionsToDropdown(userList);
-      //   },
-      //   error: function (xhr, textStatus, errorThrown) {
-      //     console.error('Error retrieving User List');
-      //   }
-      // });
+
       // populate dropdown
       function addOptionsToDropdown(optionData) {
         for (var i = 0; i < optionData.length; i++) {
@@ -179,7 +168,6 @@
             var data = $('<li class="' + chatData[$("#msgtype").val()][i].class + '">').text(chatData[$("#msgtype").val()][i].event.text)
             $('#messages').append(data);
           }
-          // window.scrollTo(0, document.body.scrollHeight);
         }
       }
     });
