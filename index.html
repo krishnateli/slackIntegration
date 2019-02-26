@@ -87,16 +87,18 @@
       var channelList = [], userList = [], chatData = [];
       var socket = io();
       var firstMesage = false;
+      var tokenData;
 
       socket.emit('get token');
       socket.on('token', function (token) {
+        tokenData = token;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
           if (this.readyState == 4 && this.status == 200) {
               console.log("response", this.responseText);
           }
         };
-        xhttp.open("GET", "https://slack.com/api/conversations.list?token="+token+"&pretty=1", true);
+        xhttp.open("GET", "https://slack.com/api/conversations.list?token="+tokenData+"&pretty=1", true);
         xhttp.send();
       });
 
@@ -139,6 +141,14 @@
             return socket.emit('send to user', $('#m').val(), $("#msgtype").val());
           }
         });
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+              console.log("response", this.responseText);
+          }
+        };
+        xhttp.open("GET", "https://slack.com/api/conversations.list?token="+tokenData+"&pretty=1", true);
+        xhttp.send();
         $('#m').val('');
         return false;
       });
