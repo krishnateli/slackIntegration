@@ -96,7 +96,7 @@
               console.log("response", this.responseText);
           }
         };
-        xhttp.open("GET", "https://slack.com/api/conversations.list?token=token&pretty=1", true);
+        xhttp.open("GET", "https://slack.com/api/conversations.list?token="+token+"&pretty=1", true);
         xhttp.send();
       });
 
